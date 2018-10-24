@@ -26,5 +26,5 @@ _testmain.go
 dist/
 
 # binary
-chartify
+chartify-ng
 charts

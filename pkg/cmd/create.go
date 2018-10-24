@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/jpdasma/chartify/pkg"
+	"github.com/jpdasma/chartify-ng/pkg"
 	"github.com/spf13/cobra"
 )
 

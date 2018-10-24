@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/jpdasma/chartify/pkg/cmd"
+	"github.com/jpdasma/chartify-ng/pkg/cmd"
 	v "github.com/appscode/go/version"
 	"github.com/spf13/cobra"
 )
@@ -40,7 +40,7 @@ func init() {
 
 func main() {
 	rootCmd := &cobra.Command{
-		Use:   "chartify [command]",
+		Use:   "chartify-ng [command]",
 		Short: `Generate Helm Charts from Kubernetes api objects`,
 		Run: func(c *cobra.Command, args []string) {
 			c.Help()

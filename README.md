@@ -1,25 +1,21 @@
-[![Go Report Card](https://goreportcard.com/badge/github.com/appscode/chartify)](https://goreportcard.com/report/github.com/appscode/chartify)
-
-[Website](https://appscode.com) • [Slack](https://slack.appscode.com) • [Forum](https://discuss.appscode.com) • [Twitter](https://twitter.com/AppsCodeHQ)
-
-# chartify
+# chartify-ng
 Generate Helm Charts from Kubernetes api objects
 
 This will be a stand-alone fork from appscode/chartify
 
 ## Installation
 ```go
-go get -u github.com/jpdasma/chartify
+go get -u github.com/jpdasma/chartify-ng
 ```
 
 ## Usage
 You can provide Kubernetes objects as YAML/JSON files in a directory using --kube-dir flag. Or, you can read Kubernetes
 objects from a cluster. Chartify will read objects from the current context of your local kubeconfig file.
 
-You can use this as a standalone cli or a Helm plugin.
+You can use this as a standalone cli.
 
 ```
-chartify create NAME [FLAGS]
+chartify-ng create NAME [FLAGS]
 ```
 
 ### Options
@@ -52,6 +48,6 @@ Please file an issue if you think you've found a bug. Be sure to describe
  * Kubernetes version, Helm version, Go version, platform, etc. if possibly relevant.
 
 ### To do
- * Change name to chartify-ng
  * [Update conventions followed by modern charts](https://github.com/appscode/chartify/issues/41)
  * [Support new api versions](https://github.com/appscode/chartify/issues/38)
+ * Act as helm plugin

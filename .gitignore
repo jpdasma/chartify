@@ -24,3 +24,7 @@ _testmain.go
 *.prof
 .idea/
 dist/
+
+# binary
+chartify
+charts

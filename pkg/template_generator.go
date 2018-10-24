@@ -407,8 +407,8 @@ func addContainerValue(key string, s1 string, s2 string) string {
 }
 
 func addTemplateImageValue(containerName string, image string, key string, containerValue map[string]interface{}) string {
-	// Example: appscode/voyager:1.5.1                 , appscode/voyager
-	// Example: docker.appscode.com/ark:0.1.0          , docker.appscode.com/ark
+	// Example: jpdasma/voyager:1.5.1                 , jpdasma/voyager
+	// Example: docker.jpdasma.com/ark:0.1.0          , docker.jpdasma.com/ark
 	// Example: localhost.localdomain:5000/ubuntu:16.04, localhost.localdomain:5000/ubuntu
 	indexSlash := strings.LastIndex(image, "/")
 	indexColon := strings.LastIndex(image, ":")

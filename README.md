@@ -5,9 +5,11 @@
 # chartify
 Generate Helm Charts from Kubernetes api objects
 
+This will be a stand-alone fork from appscode/chartify
+
 ## Installation
 ```go
-go get -u github.com/appscode/chartify
+go get -u github.com/jpdasma/chartify
 ```
 
 ## Usage
@@ -29,6 +31,7 @@ chartify create NAME [FLAGS]
       --deployments stringSlice      Specify the names of deployments(deployments@namespace) to include in chart
       --jobs stringSlice             Specify the names of jobs(job@namespace) to include in chart
       --kube-dir string              Specify the directory of the yaml files for Kubernetes objects
+      --namespace string             Specify the namespace where the resources will be fetched
       --pods stringSlice             Specify the names of pods(pod@namespace) to include in chart
       --pvcs stringSlice             Specify the names of persistent volume claims(pvc@namespace) to include in chart
       --pvs stringSlice              Specify the names of persistent volumes(pv@namespace) to include in chart
@@ -47,3 +50,8 @@ Please file an issue if you think you've found a bug. Be sure to describe
  * What did you expect?
  * What actually occurred?
  * Kubernetes version, Helm version, Go version, platform, etc. if possibly relevant.
+
+### To do
+ * Change name to chartify-ng
+ * [Update conventions followed by modern charts](https://github.com/appscode/chartify/issues/41)
+ * [Support new api versions](https://github.com/appscode/chartify/issues/38)

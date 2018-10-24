@@ -31,6 +31,7 @@ type KubeObjects struct {
 	Services               []string
 	StatefulSets           []string
 	StorageClasses         []string
+    Namespace              string
 }
 
 func (ko KubeObjects) Extract() []string {
@@ -99,7 +100,7 @@ func (ko KubeObjects) readKubernetesObjects(kubeClient clientset.Interface) []st
 func (ko KubeObjects) getPods(kubeClient clientset.Interface) []string {
 	var yamlFiles []string
 	for _, v := range ko.Pods {
-		objectName, namespace := splitNamespace(v)
+		objectName, namespace := splitNamespace(v, ko.Namespace)
 		pod, err := kubeClient.CoreV1().Pods(namespace).Get(objectName, metav1.GetOptions{})
 		if err != nil {
 			log.Fatal(err)
@@ -127,7 +128,7 @@ func (ko KubeObjects) getPods(kubeClient clientset.Interface) []string {
 func (ko KubeObjects) getReplicationControllers(kubeClient clientset.Interface) []string {
 	var yamlFiles []string
 	for _, v := range ko.ReplicationControllers {
-		objectName, namespace := splitNamespace(v)
+		objectName, namespace := splitNamespace(v, ko.Namespace)
 		rc, err := kubeClient.CoreV1().ReplicationControllers(namespace).Get(objectName, metav1.GetOptions{})
 		if err != nil {
 			log.Fatal(err)
@@ -155,7 +156,7 @@ func (ko KubeObjects) getReplicationControllers(kubeClient clientset.Interface) 
 func (ko KubeObjects) getServices(kubeClient clientset.Interface) []string {
 	var yamlFiles []string
 	for _, v := range ko.Services {
-		objectName, namespace := splitNamespace(v)
+		objectName, namespace := splitNamespace(v, ko.Namespace)
 		service, err := kubeClient.CoreV1().Services(namespace).Get(objectName, metav1.GetOptions{})
 		if err != nil {
 			log.Fatal(err)
@@ -183,7 +184,7 @@ func (ko KubeObjects) getServices(kubeClient clientset.Interface) []string {
 func (ko KubeObjects) getSecrets(kubeClient clientset.Interface) []string {
 	var yamlFiles []string
 	for _, v := range ko.Secrets {
-		objectName, namespace := splitNamespace(v)
+		objectName, namespace := splitNamespace(v, ko.Namespace)
 		secret, err := kubeClient.CoreV1().Secrets(namespace).Get(objectName, metav1.GetOptions{})
 		if err != nil {
 			log.Fatal(err)
@@ -210,7 +211,7 @@ func (ko KubeObjects) getSecrets(kubeClient clientset.Interface) []string {
 func (ko KubeObjects) getConfigMaps(kubeClient clientset.Interface) []string {
 	var yamlFiles []string
 	for _, v := range ko.ConfigMaps {
-		objectName, namespace := splitNamespace(v)
+		objectName, namespace := splitNamespace(v, ko.Namespace)
 		configmap, err := kubeClient.CoreV1().ConfigMaps(namespace).Get(objectName, metav1.GetOptions{})
 		if err != nil {
 			log.Fatal(err)
@@ -237,7 +238,7 @@ func (ko KubeObjects) getConfigMaps(kubeClient clientset.Interface) []string {
 func (ko KubeObjects) getStatefulSets(kubeClient clientset.Interface) []string {
 	var yamlFiles []string
 	for _, v := range ko.StatefulSets {
-		objectName, namespace := splitNamespace(v)
+		objectName, namespace := splitNamespace(v, ko.Namespace)
 		statefulset, err := kubeClient.AppsV1beta1().StatefulSets(namespace).Get(objectName, metav1.GetOptions{})
 		if err != nil {
 			log.Fatal(err)
@@ -291,7 +292,7 @@ func (ko KubeObjects) getPersistentVolumes(kubeClient clientset.Interface) []str
 func (ko KubeObjects) getPersistentVolumeClaims(kubeClient clientset.Interface) []string {
 	var yamlFiles []string
 	for _, v := range ko.PersistentVolumeClaims {
-		objectName, namespace := splitNamespace(v)
+		objectName, namespace := splitNamespace(v, ko.Namespace)
 		pvc, err := kubeClient.CoreV1().PersistentVolumeClaims(namespace).Get(objectName, metav1.GetOptions{})
 		if err != nil {
 			log.Fatal(err)
@@ -318,7 +319,7 @@ func (ko KubeObjects) getPersistentVolumeClaims(kubeClient clientset.Interface) 
 func (ko KubeObjects) getJobs(kubeClient clientset.Interface) []string {
 	var jobFiles []string
 	for _, v := range ko.Jobs {
-		objectName, namespace := splitNamespace(v)
+		objectName, namespace := splitNamespace(v, ko.Namespace)
 		job, err := kubeClient.BatchV1().Jobs(namespace).Get(objectName, metav1.GetOptions{})
 		if err != nil {
 			log.Fatal(err)
@@ -346,7 +347,7 @@ func (ko KubeObjects) getJobs(kubeClient clientset.Interface) []string {
 func (ko KubeObjects) getDaemons(kubeClient clientset.Interface) []string {
 	var daemonFiles []string
 	for _, v := range ko.Daemons {
-		objectName, namespace := splitNamespace(v)
+		objectName, namespace := splitNamespace(v, ko.Namespace)
 		daemon, err := kubeClient.ExtensionsV1beta1().DaemonSets(namespace).Get(objectName, metav1.GetOptions{})
 		if err != nil {
 			log.Fatal(err)
@@ -375,7 +376,7 @@ func (ko KubeObjects) getDaemons(kubeClient clientset.Interface) []string {
 func (ko KubeObjects) getDeployments(kubeClient clientset.Interface) []string {
 	var files []string
 	for _, v := range ko.Deployments {
-		objectName, namespace := splitNamespace(v)
+		objectName, namespace := splitNamespace(v, ko.Namespace)
 		deployment, err := kubeClient.ExtensionsV1beta1().Deployments(namespace).Get(objectName, metav1.GetOptions{})
 		if err != nil {
 			log.Fatal(err)
@@ -404,7 +405,7 @@ func (ko KubeObjects) getDeployments(kubeClient clientset.Interface) []string {
 func (ko KubeObjects) getReplicaSets(kubeClient clientset.Interface) []string {
 	var yamlFiles []string
 	for _, v := range ko.ReplicaSets {
-		objectName, namespace := splitNamespace(v)
+		objectName, namespace := splitNamespace(v, ko.Namespace)
 		rs, err := kubeClient.ExtensionsV1beta1().ReplicaSets(namespace).Get(objectName, metav1.GetOptions{})
 		if err != nil {
 			log.Fatal(err)
@@ -477,12 +478,16 @@ func appendSlice(mainSlice []string, subSlice []string) []string {
 	return mainSlice
 }
 
-func splitNamespace(s string) (string, string) {
+func splitNamespace(s string, namespace string) (string, string) {
 	str := strings.Split(s, "@")
 	if len(str) == 2 {
 		return str[0], str[1]
 	} else if len(str) == 1 {
-		return str[0], apiv1.NamespaceDefault
+        if len(namespace) > 0 {
+            return str[0], namespace
+        } else {
+            return str[0], apiv1.NamespaceDefault
+        }
 	}
 	log.Fatal("ERROR : Can not detect Namespace")
 	return "", ""
